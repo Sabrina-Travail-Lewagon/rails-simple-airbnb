@@ -1,0 +1,59 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div id="map" class="mapboxgl-map" style="height: 500px;"></div>
+      <div class="col-md-6">
+        <div class="flat-card-name">
+          <h1><%= @flat.name %></h1>
+          <p id="address"><%= @flat.address %></p>
+        </div>
+      </div>
+      <div class="flat-card-description">
+          <p><%= @flat.description %></p>
+          <p><i class="fa-solid fa-user-group"></i> <%= @flat.number_of_guests %> | <i class="fa-solid fa-euro-sign"></i> <%= @flat.price_per_night %></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.8.0/mapbox-gl-geocoder.min.js"></script>
+
+ <script>
+  mapboxgl.accessToken = 'pk.eyJ1Ijoic2FicmluYTk3NCIsImEiOiJjajc2MWRtdDUwem83MndwaGEycnR1d2ZzIn0.2tCErUG55FcsG_h1Qb6A4w';
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var geocoder = new MapboxGeocoder({
+      accessToken: mapboxgl.accessToken,
+      mapboxgl: mapboxgl,
+      marker: false
+    });
+
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [0, 0], // Coordonnées par défaut
+      zoom: 15
+    });
+
+    map.addControl(geocoder);
+
+    geocodeAddress("<%= @flat.address %>");
+
+    function geocodeAddress(address) {
+      geocoder.query(address, function (err, result) {
+        if (err) {
+          console.error(err);
+          return;
+        }
+
+        var coordinates = result && result.result && result.result.center;
+
+        if (coordinates) {
+          map.flyTo({ center: coordinates });
+          new mapboxgl.Marker().setLngLat(coordinates).addTo(map);
+        }
+      });
+    }
+  });
+</script>

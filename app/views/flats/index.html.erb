@@ -1,0 +1,23 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h1>Tous les appartements (<%= @flats.count %>)</h1>
+    </div>
+      <div class="row">
+        <% @flats.each do |flat| %>
+        <div class="col-md-4">
+          <div class="flat-card">
+            <div class="flat-card-content">
+              <h2><%= truncate(flat.name, length: 30, separator: ' ') %></h2>
+              <p><%= flat.address %></p>
+              <p><i class="fa-solid fa-user-group"></i> <%= flat.number_of_guests %> | <i class="fa-solid fa-euro-sign"></i> <%= flat.price_per_night %></p>
+            </div>
+            <div class="flat-card-action">
+              <%= link_to 'More info', flat_path(flat) %>
+            </div>
+          </div>
+        </div>
+        <% end %>
+      </div>
+  </div>
+</div>
